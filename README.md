@@ -3,7 +3,7 @@
 ### Introduction
 This project involves processing customer and delivery datasets using AWS Glue for ETL (Extract, Transform, Load) operations. The datasets are manually uploaded to an S3 bucket named `staging`. The cleaned and transformed data is then uploaded to another S3 bucket, `datawarehouse`. A crawler is used to create tables from the cleaned data, and SQL queries are performed using AWS Athena.
 
-![Architecture Diagram](architecture.png)
+![Architecture Diagram](png/architecture.png)
 
 The project involves the following steps:
 1. Uploading the delivery and customer datasets to the AWS S3 `staging` bucket.
@@ -13,7 +13,7 @@ The project involves the following steps:
 5. Joining and cleaning the datasets.
 6. Uploading the cleaned data to the `datawarehouse` S3 bucket.
 
-![Data Transformation](visual.png)
+![Data Transformation](png/visual.png)
 
 ### Tools
 - **AWS S3**: For storing raw and processed data.

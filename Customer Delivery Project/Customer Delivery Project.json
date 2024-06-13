@@ -1,0 +1,40 @@
+{
+  "name" : "Customer Delivery Project",
+  "jobMode" : "VISUAL",
+  "description" : "",
+  "role" : "arn:aws:iam::891376911004:role/service-role/AWSGlueServiceRole",
+  "executionProperty" : {
+    "maxConcurrentRuns" : 1
+  },
+  "command" : {
+    "name" : "glueetl",
+    "scriptLocation" : "s3://aws-glue-assets-891376911004-eu-north-1/scripts/Customer Delivery Project.py",
+    "pythonVersion" : "3"
+  },
+  "defaultArguments" : {
+    "--enable-metrics" : "true",
+    "--enable-spark-ui" : "true",
+    "--spark-event-logs-path" : "s3://aws-glue-assets-891376911004-eu-north-1/sparkHistoryLogs/",
+    "--enable-job-insights" : "false",
+    "--enable-observability-metrics" : "true",
+    "--enable-glue-datacatalog" : "true",
+    "--enable-continuous-cloudwatch-log" : "true",
+    "--job-bookmark-option" : "job-bookmark-disable",
+    "--job-language" : "python",
+    "--TempDir" : "s3://aws-glue-assets-891376911004-eu-north-1/temporary/"
+  },
+  "maxRetries" : 0,
+  "allocatedCapacity" : 5,
+  "timeout" : 2880,
+  "maxCapacity" : 5.0,
+  "glueVersion" : "4.0",
+  "numberOfWorkers" : 5,
+  "workerType" : "G.1X",
+  "codeGenConfigurationNodes" : "{\"node-1718285504145\":{\"Filter\":{\"Filters\":[{\"Negated\":false,\"Operation\":\"GT\",\"Values\":[{\"Type\":\"COLUMNEXTRACTED\",\"Value\":[\"age\"]},{\"Type\":\"CONSTANT\",\"Value\":[\"15\"]}]},{\"Negated\":false,\"Operation\":\"LT\",\"Values\":[{\"Type\":\"COLUMNEXTRACTED\",\"Value\":[\"age\"]},{\"Type\":\"CONSTANT\",\"Value\":[\"100\"]}]}],\"Inputs\":[\"node-1718285479620\"],\"LogicalOperator\":\"AND\",\"Name\":\"Filter - Age\"}},\"node-1718284157475\":{\"S3CsvSource\":{\"AdditionalOptions\":{\"EnableSamplePath\":false,\"SamplePath\":\"s3://project-customer-delivery/staging/customer.csv\"},\"Escaper\":\"\",\"Exclusions\":[],\"Name\":\"Customer\",\"OptimizePerformance\":false,\"OutputSchemas\":[{\"Columns\":[{\"Name\":\"id\",\"Type\":\"string\"},{\"Name\":\"first_name\",\"Type\":\"string\"},{\"Name\":\"last_name\",\"Type\":\"string\"},{\"Name\":\"age\",\"Type\":\"string\"},{\"Name\":\"city\",\"Type\":\"string\"},{\"Name\":\"email\",\"Type\":\"string\"}]}],\"Paths\":[\"s3://project-customer-delivery/staging/customer.csv\"],\"QuoteChar\":\"quote\",\"Recurse\":true,\"Separator\":\"comma\",\"WithHeader\":true}},\"node-1718285696070\":{\"SparkSQL\":{\"Inputs\":[\"node-1718285614203\"],\"Name\":\"Filter - Completed Order\",\"OutputSchemas\":[{\"Columns\":[{\"Name\":\"order_id\",\"Type\":\"int\"},{\"Name\":\"order_timestamp\",\"Type\":\"string\"},{\"Name\":\"delivered_timestamp\",\"Type\":\"string\"},{\"Name\":\"driver_id\",\"Type\":\"int\"},{\"Name\":\"restaurant_id\",\"Type\":\"int\"},{\"Name\":\"cust_id\",\"Type\":\"int\"},{\"Name\":\"delivery_region\",\"Type\":\"string\"},{\"Name\":\"discount_applied\",\"Type\":\"boolean\"},{\"Name\":\"discount_code\",\"Type\":\"string\"},{\"Name\":\"order_total\",\"Type\":\"decimal(10,2)\"},{\"Name\":\"discount_pc\",\"Type\":\"decimal(10,2)\"},{\"Name\":\"status\",\"Type\":\"string\"}]}],\"SqlAliases\":[{\"Alias\":\"delivery\",\"From\":\"node-1718285614203\"}],\"SqlQuery\":\"select * from delivery\\nWHERE status = 'COMPLETED';\"}},\"node-1718285614203\":{\"ApplyMapping\":{\"Inputs\":[\"node-1718284183696\"],\"Mapping\":[{\"Dropped\":false,\"FromPath\":[\"order_id\"],\"FromType\":\"string\",\"ToKey\":\"order_id\",\"ToType\":\"int\"},{\"Dropped\":false,\"FromPath\":[\"order_timestamp\"],\"FromType\":\"string\",\"ToKey\":\"order_timestamp\",\"ToType\":\"string\"},{\"Dropped\":false,\"FromPath\":[\"delivered_timestamp\"],\"FromType\":\"string\",\"ToKey\":\"delivered_timestamp\",\"ToType\":\"string\"},{\"Dropped\":false,\"FromPath\":[\"driver_id\"],\"FromType\":\"string\",\"ToKey\":\"driver_id\",\"ToType\":\"int\"},{\"Dropped\":false,\"FromPath\":[\"restaurant_id\"],\"FromType\":\"string\",\"ToKey\":\"restaurant_id\",\"ToType\":\"int\"},{\"Dropped\":false,\"FromPath\":[\"cust_id\"],\"FromType\":\"string\",\"ToKey\":\"cust_id\",\"ToType\":\"int\"},{\"Dropped\":false,\"FromPath\":[\"delivery_region\"],\"FromType\":\"string\",\"ToKey\":\"delivery_region\",\"ToType\":\"string\"},{\"Dropped\":false,\"FromPath\":[\"discount_applied\"],\"FromType\":\"string\",\"ToKey\":\"discount_applied\",\"ToType\":\"boolean\"},{\"Dropped\":false,\"FromPath\":[\"discount_code\"],\"FromType\":\"string\",\"ToKey\":\"discount_code\",\"ToType\":\"string\"},{\"Dropped\":false,\"FromPath\":[\"order_total\"],\"FromType\":\"string\",\"ToKey\":\"order_total\",\"ToType\":\"double\"},{\"Dropped\":false,\"FromPath\":[\"discount_pc\"],\"FromType\":\"string\",\"ToKey\":\"discount_pc\",\"ToType\":\"decimal\"},{\"Dropped\":false,\"FromPath\":[\"status\"],\"FromType\":\"string\",\"ToKey\":\"status\",\"ToType\":\"string\"}],\"Name\":\"Data Type Change\"}},\"node-1718285790872\":{\"Join\":{\"Columns\":[{\"From\":\"node-1718285696070\",\"Keys\":[[\"cust_id\"]]},{\"From\":\"node-1718285504145\",\"Keys\":[[\"id\"]]}],\"Inputs\":[\"node-1718285696070\",\"node-1718285504145\"],\"JoinType\":\"equijoin\",\"Name\":\"Join - Delivery&Customer\"}},\"node-1718285479620\":{\"ApplyMapping\":{\"Inputs\":[\"node-1718284157475\"],\"Mapping\":[{\"Dropped\":false,\"FromPath\":[\"id\"],\"FromType\":\"string\",\"ToKey\":\"id\",\"ToType\":\"int\"},{\"Dropped\":false,\"FromPath\":[\"first_name\"],\"FromType\":\"string\",\"ToKey\":\"first_name\",\"ToType\":\"string\"},{\"Dropped\":false,\"FromPath\":[\"last_name\"],\"FromType\":\"string\",\"ToKey\":\"last_name\",\"ToType\":\"string\"},{\"Dropped\":false,\"FromPath\":[\"age\"],\"FromType\":\"string\",\"ToKey\":\"age\",\"ToType\":\"int\"},{\"Dropped\":false,\"FromPath\":[\"city\"],\"FromType\":\"string\",\"ToKey\":\"city\",\"ToType\":\"string\"},{\"Dropped\":false,\"FromPath\":[\"email\"],\"FromType\":\"string\",\"ToKey\":\"email\",\"ToType\":\"string\"}],\"Name\":\"Data Type Change\"}},\"node-1718285867375\":{\"S3GlueParquetTarget\":{\"AutoDataQuality\":{\"IsEnabled\":false},\"Compression\":\"snappy\",\"Inputs\":[\"node-1718285790872\"],\"Name\":\"Destination\",\"PartitionKeys\":[],\"Path\":\"s3://project-customer-delivery/datawarehouse/\",\"SchemaChangePolicy\":{\"EnableUpdateCatalog\":false}}},\"node-1718284183696\":{\"S3CsvSource\":{\"AdditionalOptions\":{\"EnableSamplePath\":false,\"SamplePath\":\"s3://project-customer-delivery/staging/delivery.csv\"},\"Escaper\":\"\",\"Exclusions\":[],\"Name\":\"Delivery\",\"OptimizePerformance\":false,\"OutputSchemas\":[{\"Columns\":[{\"Name\":\"order_id\",\"Type\":\"string\"},{\"Name\":\"order_timestamp\",\"Type\":\"string\"},{\"Name\":\"delivered_timestamp\",\"Type\":\"string\"},{\"Name\":\"driver_id\",\"Type\":\"string\"},{\"Name\":\"restaurant_id\",\"Type\":\"string\"},{\"Name\":\"cust_id\",\"Type\":\"string\"},{\"Name\":\"delivery_region\",\"Type\":\"string\"},{\"Name\":\"discount_applied\",\"Type\":\"string\"},{\"Name\":\"discount_code\",\"Type\":\"string\"},{\"Name\":\"order_total\",\"Type\":\"string\"},{\"Name\":\"discount_pc\",\"Type\":\"string\"},{\"Name\":\"status\",\"Type\":\"string\"}]}],\"Paths\":[\"s3://project-customer-delivery/staging/delivery.csv\"],\"QuoteChar\":\"quote\",\"Recurse\":true,\"Separator\":\"comma\",\"WithHeader\":true}}}",
+  "sourceControlDetails" : {
+    "provider" : "GITHUB",
+    "repository" : "aws-glue-project",
+    "branch" : "main",
+    "folder" : "Customer Delivery Project"
+  }
+}
